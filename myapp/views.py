@@ -17,7 +17,7 @@ from django.contrib.auth.hashers import check_password
 # @require_POST
 # @transaction.atomic
 class login(APIView):
-    
+
     def post(self, request):
         try:
             data = json.loads(request.body)
@@ -25,14 +25,14 @@ class login(APIView):
             password = data.get('password')
         except json.JSONDecodeError:
             return JsonResponse({"detail": "Invalid JSON body"}, status=400)
-        
+
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             return JsonResponse({"detail": "Email not found "}, status=404)
         if not check_password(password , user.password):
             return JsonResponse({"detail": "Incorrect password "}, status=401)
-        
+
         access_token = get_tokens_for_user(user)
         return JsonResponse({"msg": "Successfully authenticated", "access_token": access_token,"id":user.id}, status=200)
 
@@ -45,7 +45,7 @@ class sign_up(APIView):
             name = data.get('name')
             print(password)
         except json.JSONDecodeError:
-            return JsonResponse({"detail": "Invalid JSON body"}, status=400) 
+            return JsonResponse({"detail": "Invalid JSON body"}, status=400)
         try:
             user = User.objects.get(email=email)
             return JsonResponse({"msg": "Email already exists"}, status=400)
@@ -53,26 +53,26 @@ class sign_up(APIView):
             user = User.objects.create_user(email=email, password=password,name=name)
             user.save()
             return JsonResponse({"msg": "User created successfully"}, status=200)
-        
-        
+
+
 
 class InfoCard(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Card.objects.all()
     serializer_class = InfoCardSerializer
-    
+
 
 class InfoBoard(viewsets.ModelViewSet):
     serializer_class = InfoBoardSerializer
-    
- 
+
+
     def get_queryset(self):
         # Lấy thông tin người dùng đã đăng nhập
         user = self.request.user
         # Lấy danh sách board của người dùng đó
         queryset = Board.objects.filter(owner=user.id)
         return queryset
-    
+
 
 
 
@@ -80,4 +80,9 @@ class InfoList(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = List.objects.all()
     serializer_class = InfoListSerializer
-    
+
+
+
+# Token service
+
+

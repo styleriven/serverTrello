@@ -6,23 +6,23 @@ class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None,name=None):
         if not email:
             raise ValueError('The Email field must be set')
-        
+
         email = self.normalize_email(email)
         user = self.model(email=email)
         user.set_password(password)
         print(password)
         user.name = name
         user.save(using=self._db)
-        
+
         return user
-    
+
     def create_superuser(self, email, password=None,name=None):
         user = self.create_user(email=email, password=password,name=name)
         user.is_superuser = True
         user.save(using=self._db)
-        
+
         return user
-    
+
     def save(self, *args, **kwargs):
         user = super(MyUserManager, self).save(commit=False)
         user.email = self.cleaned_data['email']
@@ -30,29 +30,35 @@ class MyUserManager(BaseUserManager):
         return user
     def get_by_natural_key(self, email):
         return self.get(email=email)
-    
+
 class User(AbstractBaseUser,MyUserManager):
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=300,null=True)
     objects = MyUserManager()
-    
+
     USERNAME_FIELD = 'email'
-    
+
 class Board(models.Model):
     name = models.CharField(max_length=300, null=False)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='boards') 
-    
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='boards')
+
     # lists = models.ManyToManyField('List', related_name='lists')
-    
+
 class List(models.Model):
     name = models.CharField(max_length=300, null=False)
     board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='lists')
-    
+
 class Card(models.Model):
     description = models.CharField(max_length=500, null=False)
     order = models.DecimalField(max_digits=6, decimal_places=2)
     list = models.ForeignKey(List, on_delete=models.CASCADE, related_name='cards')
-    
-    
 
-    
+# Token model
+class Token(models.Model):
+    token = models.CharField(max_length=191, null=False)
+    type = models.CharField(max_length=40, null=False)
+    whitelist = models.BooleanField(default=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
+# Token service
+
+
