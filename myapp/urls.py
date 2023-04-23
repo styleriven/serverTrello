@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path ,include
 from rest_framework.routers import DefaultRouter
 
-from .views import login,InfoCard,InfoBoard,InfoList,sign_up
+from .views import InfoCard,InfoBoard,InfoList,sign_up
 router = DefaultRouter()
 router.register('card',InfoCard)
 router.register('board',InfoBoard,basename='board')
@@ -25,7 +25,6 @@ router.register('list',InfoList)
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
-    TokenBlacklistView
 )
 
 urlpatterns = [

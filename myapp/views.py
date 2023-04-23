@@ -2,8 +2,8 @@ from django.http import Http404, JsonResponse
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password, check_password
-
-from .models import User,Card,List,Board
+from django.contrib.auth.models import  User
+from .models import Card,List,Board
 from utils.token import create_access_token,get_tokens_for_user
 from rest_framework.views import APIView
 from rest_framework import permissions, viewsets
@@ -13,10 +13,10 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import check_password
-
+from django.db.models import Q
 # @require_POST
 # @transaction.atomic
-class login(APIView):
+""" class login(APIView):
 
     def post(self, request):
         try:
@@ -35,7 +35,7 @@ class login(APIView):
 
         access_token = get_tokens_for_user(user)
         return JsonResponse({"msg": "Successfully authenticated", "access_token": access_token,"id":user.id}, status=200)
-
+ """
 class sign_up(APIView):
     def post(self, request):
         try:
@@ -50,8 +50,9 @@ class sign_up(APIView):
         except json.JSONDecodeError:
             return JsonResponse({"detail": "Invalid JSON body"}, status=400)
         try:
-            user = User.objects.get(email=email)
-            return JsonResponse({"msg": "Email already exists"}, status=400)
+            # check exist username or email ///
+            user = User.objects.filter(Q(username=username)| Q(email=email))
+            return JsonResponse({"msg": "Email or username already exists"}, status=400)
         except User.DoesNotExist:
             user = User.objects.create_user(email=email, password=password,first_name=first_name, username=username, last_name=last_name)
             user.save()
