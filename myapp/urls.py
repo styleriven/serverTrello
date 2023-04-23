@@ -22,10 +22,16 @@ router = DefaultRouter()
 router.register('card',InfoCard)
 router.register('board',InfoBoard,basename='board')
 router.register('list',InfoList)
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenBlacklistView
+)
 
- 
 urlpatterns = [
-    path('login/', login.as_view()),
     path('sign_up/', sign_up.as_view()),
+    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    #path('blacklist/', TokenBlacklistView.as_view(), name='token_blacklist'),
     path('', include(router.urls)),
 ]

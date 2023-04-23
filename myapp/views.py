@@ -42,7 +42,10 @@ class sign_up(APIView):
             data = json.loads(request.body)
             email = data.get('email')
             password = data.get('password')
-            name = data.get('name')
+            first_name = data.get('first_name')
+            last_name = data.get('last_name')
+            username = data.get('username')
+
             print(password)
         except json.JSONDecodeError:
             return JsonResponse({"detail": "Invalid JSON body"}, status=400)
@@ -50,7 +53,7 @@ class sign_up(APIView):
             user = User.objects.get(email=email)
             return JsonResponse({"msg": "Email already exists"}, status=400)
         except User.DoesNotExist:
-            user = User.objects.create_user(email=email, password=password,name=name)
+            user = User.objects.create_user(email=email, password=password,first_name=first_name, username=username, last_name=last_name)
             user.save()
             return JsonResponse({"msg": "User created successfully"}, status=200)
 

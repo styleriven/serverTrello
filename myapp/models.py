@@ -1,6 +1,6 @@
 from django.db import models
 
-from django.contrib.auth.models import AbstractBaseUser , BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser , BaseUserManager, User
 # Create your models here.
 class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None,name=None):
@@ -30,13 +30,6 @@ class MyUserManager(BaseUserManager):
         return user
     def get_by_natural_key(self, email):
         return self.get(email=email)
-
-class User(AbstractBaseUser,MyUserManager):
-    email = models.EmailField(unique=True)
-    name = models.CharField(max_length=300,null=True)
-    objects = MyUserManager()
-
-    USERNAME_FIELD = 'email'
 
 class Board(models.Model):
     name = models.CharField(max_length=300, null=False)
