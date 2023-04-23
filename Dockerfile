@@ -1,6 +1,6 @@
 
 #
-FROM python:3.8
+FROM python:3.10
 
 USER root
 #
@@ -18,4 +18,4 @@ RUN  pip install pipenv && pipenv install --dev --system --deploy
 COPY ./ /code/
 
 #
-CMD ["python", "manage.py", "runserver"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
