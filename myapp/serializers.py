@@ -19,9 +19,21 @@ class InfoListSerializer(serializers.ModelSerializer):
         model = List
         fields = ["id","name","cards"]
 
+from rest_framework_simplejwt.serializers import (
+    TokenObtainPairSerializer
+)
 class InfoBoardSerializer(serializers.ModelSerializer):
     lists = InfoListSerializer(many=True, required=False, allow_null=True)
     class Meta:
 
         model = Board
         fields = ["id","name","lists","owner"]
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data['first_name'] = self.user.first_name
+        data['last_name'] = self.user.last_name
+        data['username'] = self.user.username
+        data['email'] = self.user.email
+        data['user_id'] = self.user.id
+        return data

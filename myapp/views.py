@@ -14,6 +14,10 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import check_password
 from django.db.models import Q
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+)
+
 # @require_POST
 # @transaction.atomic
 """ class login(APIView):
@@ -51,7 +55,7 @@ class sign_up(APIView):
             return JsonResponse({"detail": "Invalid JSON body"}, status=400)
         try:
             # check exist username or email ///
-            user = User.objects.filter(Q(username=username)| Q(email=email))
+            user = User.objects.get(Q(username=username)| Q(email=email))
             return JsonResponse({"msg": "Email or username already exists"}, status=400)
         except User.DoesNotExist:
             user = User.objects.create_user(email=email, password=password,first_name=first_name, username=username, last_name=last_name)
@@ -60,7 +64,7 @@ class sign_up(APIView):
 
 
 
-class InfoCard(viewsets.ModelViewSet):
+class   InfoCard(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Card.objects.all()
     serializer_class = InfoCardSerializer
@@ -73,6 +77,7 @@ class InfoBoard(viewsets.ModelViewSet):
     def get_queryset(self):
         # Lấy thông tin người dùng đã đăng nhập
         user = self.request.user
+        print(user.id)
         # Lấy danh sách board của người dùng đó
         queryset = Board.objects.filter(owner=user.id)
         return queryset
@@ -89,4 +94,6 @@ class InfoList(viewsets.ModelViewSet):
 
 # Token service
 
-
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+    token_obtain_pair = TokenObtainPairView.as_view()

@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path ,include
 from rest_framework.routers import DefaultRouter
 
-from .views import InfoCard,InfoBoard,InfoList,sign_up
+from .views import InfoCard,InfoBoard,InfoList,sign_up, CustomTokenObtainPairView
 router = DefaultRouter()
 router.register('card',InfoCard)
 router.register('board',InfoBoard,basename='board')
@@ -29,7 +29,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('sign_up/', sign_up.as_view()),
-    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     #path('blacklist/', TokenBlacklistView.as_view(), name='token_blacklist'),
     path('', include(router.urls)),
