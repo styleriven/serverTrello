@@ -10,14 +10,14 @@ class signupSerializer(serializers.Serializer):
 class InfoCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
-        fields = ["id","description","order", "title"]
+        fields = ["id","description","order", "title","list"]
 
 
 class InfoListSerializer(serializers.ModelSerializer):
     cards = InfoCardSerializer(many=True, required=False, allow_null=True)
     class Meta:
         model = List
-        fields = ["id","title","cards"]
+        fields = ["id","title","cards","board"]
 
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer
