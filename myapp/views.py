@@ -71,6 +71,7 @@ class   InfoCard(viewsets.ModelViewSet):
 
 
 class InfoBoard(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     serializer_class = InfoBoardSerializer
 
 
