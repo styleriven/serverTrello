@@ -42,9 +42,9 @@ class List(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='lists')
 
 class Card(models.Model):
-    description = models.CharField(max_length=500, null=False)
+    description = models.CharField(max_length=500, null=False, default="")
     title = models.CharField(max_length=500, null=False, default="")
-    order = models.DecimalField(max_digits=6, decimal_places=2)
+    order = models.DecimalField(max_digits=6, decimal_places=2,default=0)
     list = models.ForeignKey(List, on_delete=models.CASCADE, related_name='cards')
 
 # Token model

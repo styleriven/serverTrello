@@ -15,6 +15,15 @@ class InfoCardSerializer(serializers.ModelSerializer):
 
 class InfoListSerializer(serializers.ModelSerializer):
     cards = InfoCardSerializer(many=True, required=False, allow_null=True)
+    
+    def create(self, validated_data):
+        cards_data = validated_data.pop('cards')
+        info_list = List.objects.create(**validated_data)
+        for card_data in cards_data:
+            card_data['cards'] = info_list
+            Card.objects.create(**card_data)
+        return info_list
+    
     class Meta:
         model = List
         fields = ["id","title","cards","board"]
@@ -24,10 +33,19 @@ from rest_framework_simplejwt.serializers import (
 )
 class InfoBoardSerializer(serializers.ModelSerializer):
     lists = InfoListSerializer(many=True, required=False, allow_null=True)
+    
+    def create(self, validated_data):
+        lists_data = validated_data.pop('lists')
+        info_board = Board.objects.create(**validated_data)
+        for list_data in lists_data:
+            list_data['board'] = info_board
+            List.objects.create(**list_data)
+        return info_board
+    
     class Meta:
-
         model = Board
         fields = ["id","name","lists","owner"]
+    
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
