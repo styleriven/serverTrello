@@ -21,7 +21,7 @@ class InfoListSerializer(serializers.ModelSerializer):
             cards_data = validated_data.pop('cards')
             info_list = List.objects.create(**validated_data)
             for card_data in cards_data:
-                card_data['cards'] = info_list
+                card_data['list'] = info_list
                 Card.objects.create(**card_data)
             return info_list
         except Exception as e:
