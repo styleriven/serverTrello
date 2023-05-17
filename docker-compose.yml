@@ -5,3 +5,8 @@ services:
     ports:
       - 8000:8000
     restart: always
+  front:
+    image: duchoang206h/trello_front
+    ports:
+      - 3000:3000
+    restart: always
