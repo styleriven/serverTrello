@@ -8,7 +8,7 @@ WORKDIR /code
 
 #
 COPY Pipfile Pipfile.lock /code/
-
+RUN pip install --upgrade pip
 #
 RUN pip install mysqlclient
 

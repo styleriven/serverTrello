@@ -47,11 +47,3 @@ class Card(models.Model):
     order = models.DecimalField(max_digits=6, decimal_places=2,default=0)
     list = models.ForeignKey(List, on_delete=models.CASCADE, related_name='cards')
 
-# Token model
-class Token(models.Model):
-    token = models.CharField(max_length=191, null=False)
-    type = models.CharField(max_length=40, null=False)
-    whitelist = models.BooleanField(default=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
-# Token service
-
